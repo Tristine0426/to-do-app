@@ -29,7 +29,6 @@ function onReady() {
         
         //empty the input
         newToDoText.value = '';
-        
     });
 
 }
@@ -37,3 +36,20 @@ function onReady() {
 window.onload = function() {
     onReady();
 };
+
+        // add delete button
+        let deletebtn = document.createElement('BUTTON');
+        
+        // create a text node
+        let t = document.createTextNode('delete');
+        
+        // append the text to <button>
+        deletebtn.appendChild(t);
+        
+        // append <button> to <form>
+        document.body.appendChild(deletebtn);
+
+deletebnt.addEventListener('click', function() {
+            let deleteLi = newToDoText.value;
+            toDoList.removeChild(deleteLi);
+        });
