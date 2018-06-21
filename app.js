@@ -1,37 +1,57 @@
 function onReady() {
+    const toDos = [];
     const addToDoForm = document.getElementById('addToDoForm');
-    const newToDoText = document.getElementById('newToDoText');
-    const toDoList = document.getElementById('toDoList');
-    
-    addToDoForm.addEventListener('submit', event => {
-        event.preventDefault();
-        
-        // get the text
-        let title = newToDoText.value;
-        
-        // create a new li
-        let newLi = document.createElement('li');
 
-        // create a new input
-        let checkbox = document.createElement('input');
+    // a function to change state of to-dos. will update of array to-dos
+    function createNewToDo() {
+      // access text input, so we can get the text for the title of each to-do
+      const newToDoText = document.getElementById('newToDoText');
 
-        // set the input's type to checkbox
-        checkbox.type = "checkbox";
-        
-        // set the title
-        newLi.textContent = title;
+      // prevent user from submiting empty to-do items
+      if (!newToDoText.value) { return; }
 
-        // attach the checkbox to the li
-        newLi.appendChild(checkbox);
-        
-        // attach the li to the ul
-        toDoList.appendChild(newLi);
-        
-        //empty the input
+        // add new to-do to the toDos array
+        toDos.push({
+          // assign the value of the text input
+          title: newToDoText.value,
+          complete: false
+        });
+        // clear text input for the user
         newToDoText.value = '';
-        
-    });
 
+        renderTheUI();
+    }
+
+    function renderTheUI() {
+      // access ul
+      const toDoList = document.getElementById('toDoList');
+
+      toDoList.textContent = '';
+
+      // render each to-do as a li in the ul
+      toDos.forEach(function(toDo) {
+        // create li and checkboc
+        const newLi = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = "checkbox";
+
+        // add the toDo's title text to newLi
+        newLi.textContent = toDo.title;
+
+        // update DOM
+        toDoList.appendChild(newLi);
+        newLi.appendChild(checkbox);
+      });
+    }
+
+    // add event listener
+    addToDoForm.addEventListener('submit', event => {
+      event.preventDefault(); // call preventDefault on the submit event to prevent toprevent the page from reloading
+      createNewToDo();
+  });
+
+    // render initial UI
+    renderTheUI();
 }
 
 window.onload = function() {
