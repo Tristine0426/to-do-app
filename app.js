@@ -12,7 +12,6 @@ function onReady() {
 
         // add new to-do to the toDos array
         toDos.push({
-          // assign the value of the text input
           title: newToDoText.value,
           complete: false
         });
@@ -46,9 +45,9 @@ function onReady() {
 
     // add event listener
     addToDoForm.addEventListener('submit', event => {
-      event.preventDefault(); // call preventDefault on the submit event to prevent toprevent the page from reloading
+      event.preventDefault(); // prevent the page from reloading
       createNewToDo();
-  });
+    });
 
     // render initial UI
     renderTheUI();
