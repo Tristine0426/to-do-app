@@ -1,38 +1,89 @@
 function onReady() {
+    const toDos = [];
     const addToDoForm = document.getElementById('addToDoForm');
-    const newToDoText = document.getElementById('newToDoText');
-    const toDoList = document.getElementById('toDoList');
-    
-    addToDoForm.addEventListener('submit', event => {
-        event.preventDefault();
-        
-        // get the text
-        let title = newToDoText.value;
-        
-        // create a new li
-        let newLi = document.createElement('li');
+    let id = 0;
 
-        // create a new input
-        let checkbox = document.createElement('input');
+    // change the state and update the array
+    function createNewToDo() {
 
-        // set the input's type to checkbox
+      // access the text input to get the text for the title of each to do
+      const newToDoText = document.getElementById('newToDoText');
+
+      // prevent user to submit empty to do
+      if (!newToDoText.value) { return; }
+
+      // add properties to the array
+      toDos.push({
+        title: newToDoText.value,
+        complete: false,
+        id: ++id
+      });
+    }
+
+    function deleteToDo(id) {
+      return toDos.filter(toDo => toDo.id !== id);
+    }
+
+    function saveToDos() {
+      localStorage.setItem('toDos', JSON.stringify(toDos) );
+    }
+
+    // This function will take the current state in the array and render the UI
+    function renderTheUI() {
+      // access the <ul> in the html
+      const toDoList = document.getElementById('toDoList');
+      toDoList.textContent = '';
+
+      // take a function and applies that to each item in the array
+      toDos.forEach(function(toDo) {
+        const newLi = document.createElement('li');
+
+        const checkbox = document.createElement('input');
         checkbox.type = "checkbox";
-        
-        // set the title
-        newLi.textContent = title;
+        checkbox.checked = toDo.complete;
 
-        // attach the checkbox to the li
-        newLi.appendChild(checkbox);
-        
-        // attach the li to the ul
+        // add delete button
+        let deleteBtn = document.createElement('button');
+
+        // create a text node
+        let deleteName = document.createTextNode('delete');
+
+        // each li rendered has a title displayed
+        newLi.innerHTML = toDo.title;
+
+        checkbox.addEventListener('click', function() {
+          toDo.complete = checkbox.checked ? true : false;
+          saveToDos();
+        });
+
         toDoList.appendChild(newLi);
-        
-        //empty the input
-        newToDoText.value = '';
-        
-    });
+        deleteBtn.appendChild(deleteName);
+        newLi.appendChild(checkbox);
+        newLi.appendChild(deleteBtn);
 
+        // event listener for delete button
+        deleteBtn.addEventListener('click', () => {
+          toDos = deleteToDo(toDo.id);
+          renderTheUI();
+          saveToDos();
+        });
+    });
+  }
+
+    // call createNewToDo function
+    addToDoForm.addEventListener('submit', event => {
+      event.preventDefault();
+      createNewToDo();
+      newToDoText.value = '';
+      renderTheUI();
+      saveToDos();
+  });
+
+    // render the initial UI
+    renderTheUI();
+    saveToDos();
 }
+
 
 window.onload = function() {
     onReady();
