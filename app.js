@@ -1,47 +1,59 @@
 function onReady() {
-    const toDos = [];
-    const addToDoForm = document.getElementById('addToDoForm');
+  const toDos = [];
+  const addToDoForm = document.getElementById('addToDoForm');
 
-    function createNewToDo() {
-      const newToDoText = document.getElementById('newToDoText');
-      if (!newToDoText.value) { return; }
+  // change the state and update the array
+  function createNewToDo() {
+    // access the text input to get the text for the title of each to do
+    const newToDoText = document.getElementById('newToDoText');
 
-      toDos.push({
+    // prevent user to submit empty to do
+    if (!newToDoText.value) { return; }
+
+    // add properties to the array
+    toDos.push({
       title: newToDoText.value,
       complete: false
     });
 
+    // clear text input
     newToDoText.value = '';
 
     renderTheUI();
   }
 
-    function renderTheUI() {
-      const toDoList = document.getElementById('toDoList');
+  // This function will take the current state in the array and render the UI
+  function renderTheUI() {
+    // access the <ul> in the html
+    const toDoList = document.getElementById('toDoList');
 
-      toDoList.textContent = '';
+    toDoList.textContent = '';
 
-      toDos.forEach(function(toDo) {
-        const newLi = document.createElement('li');
-        const checkbox = document.createElement('input');
-        checkbox.type = "checkbox";
+    // take a function and applies that to each item in the array
+    toDos.forEach(function(toDo) {
+      const newLi = document.createElement('li');
+      const checkbox = document.createElement('input');
+      checkbox.type = "checkbox";
 
-        newLi.textContent = toDo.title;
+      // add text to li
+      newLi.textContent = toDo.title;
 
-        toDoList.appendChild(newLi);
-        newLi.appendChild(checkbox);
+      // update DOM
+      toDoList.appendChild(newLi);
+      newLi.appendChild(checkbox);
     });
   }
 
-    addToDoForm.addEventListener('submit', event => {
-      event.preventDefault();
-      createNewToDo();
+  // call createNewToDo function
+  addToDoForm.addEventListener('submit', event => {
+    event.preventDefault();
+    createNewToDo();
   });
 
-    renderTheUI();
+  // render the initial UI
+  renderTheUI();
 }
 
-
-window.onload = function() {
-    onReady();
-};
+window.onLoad = function() {
+  onReady();
+}
