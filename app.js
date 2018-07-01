@@ -3,11 +3,12 @@ function onReady() {
     let id = 0;
     const addToDoForm = document.getElementById('addToDoForm');
 
-    function deleteToDo(id) {
-      return toDos.filter(toDo => toDo.id !== id);
-      });
-      renderTheUI(toDos);
-    }
+    function deleteToDo(toDo) {
+   toDos = toDos.filter( (todo) => {
+     return todo !== toDo;
+   });
+    renderTheUI(toDos);
+  }
 
     // change the state and update the array
     function createNewToDo() {
@@ -64,7 +65,7 @@ function onReady() {
 
         // add event listener to delete button
         deleteBtn.addEventListener("click", function() {
-          deleteToDo(id)
+          deleteToDo(toDo)
           // render the initial UI
           renderTheUI();
         });
