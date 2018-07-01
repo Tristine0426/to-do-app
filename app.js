@@ -1,7 +1,14 @@
 function onReady() {
-    const toDos = [];
-    const addToDoForm = document.getElementById('addToDoForm');
+    let toDos = [];
     let id = 0;
+    const addToDoForm = document.getElementById('addToDoForm');
+
+    function deleteToDo(toDo) {
+      toDos = toDos.filter( (todo) => {
+        return todo !== toDo;
+      });
+      renderTheUI(toDos);
+    }
 
     // change the state and update the array
     function createNewToDo() {
@@ -14,74 +21,56 @@ function onReady() {
 
       // add properties to the array
       toDos.push({
-        title: newToDoText.value,
-        complete: false,
-        id: ++id
-      });
-    }
+      title: newToDoText.value,
+      complete: false,
+      id: ++id
+    });
 
-    function deleteToDo(id) {
-      return toDos.filter(toDo => toDo.id !== id);
-    }
+    // clear text input
+    newToDoText.value = '';
 
-    function saveToDos() {
-      localStorage.setItem('toDos', JSON.stringify(toDos) );
-    }
+    renderTheUI();
+  }
+
+  // call createNewToDo function
+  addToDoForm.addEventListener('submit', event => {
+    event.preventDefault();
+    createNewToDo();
+});
 
     // This function will take the current state in the array and render the UI
     function renderTheUI() {
       // access the <ul> in the html
       const toDoList = document.getElementById('toDoList');
+
       toDoList.textContent = '';
 
       // take a function and applies that to each item in the array
       toDos.forEach(function(toDo) {
         const newLi = document.createElement('li');
-
         const checkbox = document.createElement('input');
-        checkbox.type = "checkbox";
-        checkbox.checked = toDo.complete;
-
-        // add delete button
         let deleteBtn = document.createElement('button');
+        let deleteName = document.createTextNode("Delete");
 
-        // create a text node
-        let deleteName = document.createTextNode('delete');
+        // set checkbox type
+        checkbox.type = "checkbox";
 
-        // each li rendered has a title displayed
-        newLi.innerHTML = toDo.title;
-
-        checkbox.addEventListener('click', function() {
-          toDo.complete = checkbox.checked ? true : false;
-          saveToDos();
-        });
+        // add text to li
+        newLi.textContent = toDo.title;
 
         toDoList.appendChild(newLi);
-        deleteBtn.appendChild(deleteName);
         newLi.appendChild(checkbox);
-        newLi.appendChild(deleteBtn);
+        deleteBtn.appendChild(deleteName); // append name to delete button
+        newLi.appendChild(deleteBtn);  // add button to li
 
-        // event listener for delete button
-        deleteBtn.addEventListener('click', () => {
-          toDos = deleteToDo(toDo.id);
+        // add event listener to delete button
+        deleteBtn.addEventListener("click", function() {
+          deleteToDo(toDo)
+          // render the initial UI
           renderTheUI();
-          saveToDos();
         });
-    });
+      });
   }
-
-    // call createNewToDo function
-    addToDoForm.addEventListener('submit', event => {
-      event.preventDefault();
-      createNewToDo();
-      newToDoText.value = '';
-      renderTheUI();
-      saveToDos();
-  });
-
-    // render the initial UI
-    renderTheUI();
-    saveToDos();
 }
 
 
